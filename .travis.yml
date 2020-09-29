@@ -1,44 +1,40 @@
 sudo: required
 language: rust
-
-# Cache cargo symbols for faster build
 cache: cargo
-
-# Dependencies of kcov, used by coverage
 addons:
   apt:
     packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev
-      - cmake # also required for cargo-update
+    - libcurl4-openssl-dev
+    - libelf-dev
+    - libdw-dev
+    - binutils-dev
+    - cmake
     sources:
-      - kalakris-cmake
-
-# run builds for all the trains (and more)
+    - kalakris-cmake
 rust:
-  - nightly
-  - beta
-  # check it compiles on the latest stable compiler
-  - stable
-
+- nightly
+- beta
+- stable
 before_script:
-  - export PATH=$HOME/.cargo/bin:$PATH
-  - cargo install cargo-update || echo "cargo-update already installed"
-  - cargo install cargo-travis || echo "cargo-travis already installed"
-  - cargo install-update -a # update outdated cached binaries
-
-# the main build
+- export PATH=$HOME/.cargo/bin:$PATH
+- cargo install cargo-update || echo "cargo-update already installed"
+- cargo install cargo-travis || echo "cargo-travis already installed"
+- cargo install-update -a
 script:
-  - |
-    cargo build --verbose &&
-    cargo test --verbose &&
-    cargo bench --verbose &&
-    cargo doc --verbose
-
+- |
+  cargo build --verbose &&
+  cargo test --verbose &&
+  cargo bench --verbose &&
+  cargo doc --verbose
 after_success:
-  # measure code coverage and upload to coveralls.io
-  - cargo coveralls
-  # upload documentation to github.io (gh-pages branch)
-  - cargo doc-upload
+- cargo coveralls
+- cargo doc-upload
+deploy:
+  provider: gcs
+  access_key_id:
+    secure: azTyYz0Hnoz1Fy+c2dwnj7f8cOkahWkOS+JFCdYsEZR5mX8xRFaiFFi7K/Ki4LvxNLxVZnONmUL5HvJF+aWz48Faw6jBsLm5e8gIbkJvLHaaj2hT47WZaSwl/PXMrLQqfEa6ETN3jDeaademee9LItIVYyiRLs+EVIBuZvOJvAkOrUZmj+cbrJyupPxK4AZl7bUnLr5FhlfogFaArsxegR4Pe7THTqcFmHqWqkja/Cbp/O6Q/Dv5CnerZ7DZKHcUbBsQxDg+KuXpEvo3pds3PTxuY3xJ+zuz16Oo4PU52/PaZ9qICcOWQM9mU83NE17Du8FpT5+Egu1ZRrGgRQIrBtCV+BJj6t4X61AK7wLDsJ5ptZzclB340Lg7R2P69bxWhW+7mTn0kZ79RBU9A3Zqq0dxS2unTIJpLHZJ2hQTvYri3uAtP0MxiLRupgqdf6+KLaSLuQpFYwPKrz37YiwuCjuZ86jD+JEfO6tJvXlBDanukZIWlRiMG9vqideaMgKtGTTuq6aJY8TEja+mXY5CX3fLXvUpfHc6Bq5NpaKzrDtkjjcIhiVqRMYOaCUlIFjOSsFIXOFO84yLD54KW4aPxIGYCkpV2ltaFhBHKdG8OGk950uvCMrtiww/e9R5RsP+tGOKOO4sO4lU2CLNI8yISUsBhZwIzeKbj7ch9YooDac=
+  secret_access_key:
+    secure: Yx0vGoSjnNjwYxsnfe5aJpgPOGO0piR5ck8D4XIItPoY9GMwXBjdybAsN3hLoYoSeGBFZ/3qxndrvdeeWSgxAY5BkeMz7NxDsVNGvemkA0Zg9kFXm9/tOsrn9cz9yUUGxxbjNbwo8e6QN8TyfIRtJ9UQfP1da8CkqamHRhxJVVslDKiOkXHO/jiQX6SqsbWctNE6MHohpGuWGa2VV8McWb9BoOpiz91C+WZ1yJwAC2IJ/dOBQ+5zIPHpJSO2g0ZOf8+bQYQTVG0Vqz4tWzfUeQmGmvLpRvgnk7ZH5Og24JBa3v/81XYVK3c7BfIbOjpIB2RfzH5HFBhlv5qaCD6WnSqHBpKwUPddGbAUEsigB2pD+2UfEKdmLBnJrXZls9Jj84DQ3aKtqIaw05qdMfB6SCuf9sh9t+rDwit20zmo/7fXrPSebAEpQEZKtYu1z++pQWIRp/BHRkqa5Uhcu+72mM3ivQsPKeKM0B4XO+VrnHjEC9ZNz6/1QIWFTN2quEUm+RHCpPMyq6tRMYpINd9WI37lU+xE3SXkTS5NgC3AYpQLvq5eHvhxAeqnDZsq9Gn54Vuc/ksbD/1SVslx5Ddkm4uTa4VvKcB75jreXvNwOjA8BrHvUnd82J7qLgYwDOmOdGC5sptuhr0RSXEVnKPNe1ogsUX4zbCs2A+3t4RCWdU=
+  bucket:
+    secure: Q2ozgeH4eXB2ag7o7tgsi9stpnWHzFxz5p5RSj2hRSE5NTbzstJzZOZ1qny4gkGZDqJ+STxg2MbUZJef2OD+/xdijmVM0ddh2UReuhOiytuZ3zl5V0p+4hoHGuLCvRfeQetRENy9qcuH2upi606l7EcJG1HIEGFA9eR0EcJvDepm3MQ5AK0laLw2Jr0vhrK/ts5ulWL6sYR8nheaGF7D5Xy3O70rnhWnEMwIo2S1yLEhD177T62RHkNgJRljB4k2YOh9QSl0l10UOVuauXAr4zxH4/SG9dZVovnDAXkdiHnpLcho5NMtC0dxHIgvdiLXGzi30r5QmKJqOh0dT7RDFdIp1UV1K11xxXXZUEx+FcVfkMdNXnf3hUQF8nU8VjuF9+rxN8w9pt1zcQZsBLxKCEdMlbLI5vNsWjWqLBVR1bjyXprgPb2KXuMCg2SqjrjmSUS16gzuhnyD9BMfM8D3W8JAjSeGpvlliZSuXIScUeolsMrUZruT4Z+Ff05ZCY84TpJ2aZRYBokqzzFGsfKUY3pALC5FnUXs1VpJxJwnqdQcN15MNuGb8YFldP4PsK1O3MSmp4bTWDDGL7LoVXobg00F+STZ05RW6MZEqTl6DJECAX8T1cwszxu9nNn16Rugy7AskwiLQD/gHSASonQ8uNf4bZeDGfdS2DF+AtLQv+E=
+  skip_cleanup: true

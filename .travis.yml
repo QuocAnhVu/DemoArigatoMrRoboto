@@ -20,8 +20,7 @@ env:
     - secure: cTKNf0OQrbSBaSQPMea899VEshE7ml7if4WsQtpAV/ujKc1mPOBJ1iytH5qW68jyuYtuuFIWa5oJ09VQKPwEvwRPFjXVLZ+iMykowpyOL7W/84EzzKQ1KMpuCfub+vJecblufmKlnBI+/sjzApoTuaqniBIPemGuvePzT4CZKL9o6p/NoALkhXu5khmQh+Jcw/IL4sErr1jxlr77EFyUG4OQOmrh7jFV3wj84w7NGxTow7A1e5yt7IKFyfGqniJ+QZCJ3YL5UBflYI26DoQ6Nk/kJHnFKdG6pLGlNTysxV2fxHifAoNC8Otrf/XxhsMEZ8r2Tyy7p7Egp66swOq7T3l2mWkLkwG5S9Z/stwDDaVdZYAss11NQBFfnUVZ729jJ2UrZD2fa2kp4+8hDCzuoleWwlOdGJBq38znXEQCBhyojcWUM7tRhxUOoyOZXjLnxNIEqjU0MOlWjpd9FBJu3KFOn/Ek+in5zSsULCg2mPxTV/y594Mrj/h/wzJdDi93yf4ICSkBc28wIYKYBDf4p9s9w2WY1Rkjc/SJTXTDKJJsmBaxJCPLLGqBkKGIVHGfZUGt01TxlO4qzASNLTB+eyoF8TkanK0S0hLloecQWweDBdN1gdH1mI+PWzLeTZLZwqHJwtnp0q+ybBM2x4ydErWiyGWCDyZ9A0VOC1FrUQM=
 after_success:
   - echo '${SSH_HOST_KEY}' >> $HOME/.ssh/known_hosts
-  - curl --verbose --ftp-create-dirs -T target/debug/DemoArigatoMrRobto --key .travis/id_rsa --pubkey
-    .travis/id_rsa.pub sftp://${SFTP_URL}/~/deploy/main
+  - sftp -i .travis/id_rsa ${SFTP_URL}:deploy <<< $'put target/debug/DemoArigatoMrRobto'
 deploy:
   provider: gcs
   access_key_id:

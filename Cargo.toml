@@ -1,5 +1,5 @@
 [package]
-name = "DemoArigatoMrRobto"
+name = "demo_arigato_mr_roboto"
 version = "0.1.0"
 authors = ["Quoc-Anh Vu <quoc.v.anh@gmail.com>"]
 edition = "2018"

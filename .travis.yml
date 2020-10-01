@@ -17,4 +17,4 @@ after_success:
     -in .travis/id_rsa.enc -out .travis/id_rsa -d
   - chmod 600 .travis/id_rsa
   - ssh-keyscan ${DEPLOY_HOST} >> $HOME/.ssh/known_hosts
-  - sftp -i .travis/id_rsa travisci@${DEPLOY_HOST}:deploy <<< $'put target/debug/DemoArigatoMrRobto'
+  - sftp -i .travis/id_rsa travisci@${DEPLOY_HOST}:deploy <<< $'put target/debug/demo_arigato_mr_roboto'
